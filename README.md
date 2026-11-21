@@ -6,19 +6,21 @@
 
 In lifelong multi-agent path finding (LMAPF), each warehouse robot receives a new navigation goal as soon as it reaches the current one. This study asks what happens when one robot moves to the front of the planning order for a single round. It replays the original and promoted orders from the same warehouse state with the same search budget, then checks when the promoted robot finishes and whether other robots take longer.
 
-R5 uses two public Moving AI warehouse maps, 128 source simulations, and 460 paired snapshots. The promoted robot finished earlier in 39 pairs, and at least one other robot took longer in 30 of those pairs. First-step direction identified 1 of the 39 earlier completions, while two-step progress identified 22. Across 920 focal queries, an independent time-layer reference checked the effects of search budget, other robots’ reservations, goal occupancy rules, and the planning horizon. These counts describe the simulated scenarios and the study’s snapshot selection rules. See the [R5 summary](data_r5/r5_summary.json) and [experimental protocol](PROTOCOL_R5.md).
+R5 uses two public Moving AI warehouse maps, 128 source simulations, and 460 paired snapshots. The promoted robot finished earlier in 39 pairs, and at least one other robot took longer in 30 of those pairs. First-step direction identified 1 of the 39 earlier completions, while two-step progress identified 22. Across 920 focal queries, an independent time-layer reference checked the effects of search budget, other robots’ reservations, goal occupancy rules, and the planning horizon. These counts describe the simulated scenarios and the study’s snapshot selection rules. See the [R5 summary](r5/data_r5/r5_summary.json) and [experimental protocol](r5/PROTOCOL_R5.md).
 
 ## Repository guide
 
+The [R5 reproduction directory](r5/) contains the experiment code, protocol, benchmark maps, and recorded data. [Supporting documents](docs/) contain the environment notes, sources, and manuscript release records.
+
 | Category | Where to look | What it contains |
 | --- | --- | --- |
-| Experiment design and environment | [Protocol](PROTOCOL_R5.md), [parameters](protocol_r5.json), [environment](ENVIRONMENT.txt), [Python dependencies](requirements-r5.txt), [frozen checksums](frozen_protocol.sha256) | Predefined experiment settings, software versions, and integrity checks for the frozen inputs |
-| Maps and references | [benchmarks/](benchmarks/), [source notes](SOURCES.md) | The two Moving AI maps, benchmark provenance, and research references |
-| Simulator and planners | [warehouse.py](warehouse.py), [interval_planner.py](interval_planner.py), [reference.py](reference.py) | Warehouse simulation and task generation, rolling safe-interval planning, and an independent time-layer reference |
-| Experiment and analysis entry points | [run_r5.py](run_r5.py), [analyze_r5.py](analyze_r5.py), [figures_r5.py](figures_r5.py) | Run simulations, verify recorded trajectories and local queries, and generate figures |
-| R5 data and results | [data_r5/](data_r5/), [summary](data_r5/r5_summary.json), [query checks](data_r5/r5_query_checks.csv), [policy comparison](data_r5/r5_policy_comparison.csv) | Raw run and replay logs, query-level checks, aggregate results, and supplementary policy and timing data |
+| Experiment design and environment | [Protocol](r5/PROTOCOL_R5.md), [parameters](r5/protocol_r5.json), [environment](docs/ENVIRONMENT.txt), [Python dependencies](r5/requirements-r5.txt), [frozen checksums](r5/frozen_protocol.sha256) | Predefined experiment settings, software versions, and integrity checks for the frozen inputs |
+| Maps and references | [benchmarks/](r5/benchmarks/), [source notes](docs/SOURCES.md) | The two Moving AI maps, benchmark provenance, and research references |
+| Simulator and planners | [warehouse.py](r5/warehouse.py), [interval_planner.py](r5/interval_planner.py), [reference.py](r5/reference.py) | Warehouse simulation and task generation, rolling safe-interval planning, and an independent time-layer reference |
+| Experiment and analysis entry points | [run_r5.py](r5/run_r5.py), [analyze_r5.py](r5/analyze_r5.py), [figures_r5.py](r5/figures_r5.py) | Run simulations, verify recorded trajectories and local queries, and generate figures |
+| R5 data and results | [data_r5/](r5/data_r5/), [summary](r5/data_r5/r5_summary.json), [query checks](r5/data_r5/r5_query_checks.csv), [policy comparison](r5/data_r5/r5_policy_comparison.csv) | Raw run and replay logs, query-level checks, aggregate results, and supplementary policy and timing data |
 | Rendered figures | [English](figures_r5/en/), [Chinese](figures_r5/cn/) | Warehouse layouts and diagnostic results in PNG, SVG, and PDF |
-| Manuscript sources | [Chinese source](manuscript_cn/paper_cn.txt), [English source](manuscript_en/paper_en.txt), [Chinese build files](manuscript_cn/), [English build files](manuscript_en/) | Manuscript text, tables, references, and the Word and LaTeX build inputs. The [release manifest](manuscript_release.json) records artifact checksums and the [review response](REVIEW_RESPONSE_CN.md) tracks revisions. |
+| Manuscript sources | [Chinese source](manuscript_cn/paper_cn.txt), [English source](manuscript_en/paper_en.txt), [Chinese build files](manuscript_cn/), [English build files](manuscript_en/) | Manuscript text, tables, references, and the Word and LaTeX build inputs. The [release manifest](docs/manuscript_release.json) records artifact checksums and the [review response](docs/REVIEW_RESPONSE_CN.md) tracks revisions. |
 | Historical R4 experiments | [historical_r4/](historical_r4/), [R4 guide](historical_r4/README.md) | Earlier synthetic experiments, their simulator, data, and figures |
 
 To read the study, start with the [manuscript](manuscript_en/paper_en.txt) and the [diagnostic figure](figures_r5/en/diagnostic_validation.png). To check the archived results, run the verification commands below from the repository root. To regenerate R5, run the simulation, analysis, and figure steps in that order.
@@ -29,15 +31,16 @@ This release contains the independent public-map validation, the original synthe
 
 ### Verify the release
 
-Use Python 3.12 and the versions in requirements-r5.txt. Run from the archive root:
+Use Python 3.12 and the versions in `r5/requirements-r5.txt`. Run these commands from the repository root.
 
 ```sh
-python -m pip install -r requirements-r5.txt
-python analyze_r5.py --verify-probes
+(cd r5 && shasum -a 256 -c frozen_protocol.sha256)
+python -m pip install -r r5/requirements-r5.txt
+python r5/analyze_r5.py --verify-probes
 cd historical_r4
 python verify.py
 python verify_r4.py
-python check_r5_legacy.py --out ../data_r5
+python check_r5_legacy.py --out ../r5/data_r5
 cd ..
 ```
 
@@ -45,9 +48,9 @@ The analysis reads both observed trajectories and the issued goals to check each
 
 ### Rerun
 
-- `python run_r5.py --workers 4` reruns controlled fixtures, 128 public-layout source runs, their paired diagnostics, 256 continuing-policy runs, and the final serial timing measures. The diagnostic block can be run independently with `--only diagnostic`. The frozen files and their checksums are in `frozen_protocol.sha256`. Timing is host-dependent.
-- `python analyze_r5.py --verify-probes` then rebuilds the summaries, validates legality and arrival from the raw paths, repeats the fixed-reservation reference checks, and regenerates the numerical tables. All primary runs use separate scene seeds from the supplemental policy comparison.
-- `python figures_r5.py --language en --out figures_r5/en` regenerates English figures. The Chinese equivalent uses `--language cn --out figures_r5/cn --font path/to/NotoSansCJKsc-Regular.otf`.
+- `python r5/run_r5.py --workers 4` reruns controlled fixtures, 128 public-layout source runs, their paired diagnostics, 256 continuing-policy runs, and the final serial timing measures. The diagnostic block can be run independently with `--only diagnostic`. The frozen files and their checksums are in [the R5 checksum manifest](r5/frozen_protocol.sha256). Timing is host-dependent.
+- `python r5/analyze_r5.py --verify-probes` then rebuilds the summaries, validates legality and arrival from the raw paths, repeats the fixed-reservation reference checks, and regenerates the numerical tables. All primary runs use separate scene seeds from the supplemental policy comparison.
+- `python r5/figures_r5.py --language en --out figures_r5/en` regenerates English figures. The Chinese equivalent uses `--language cn --out figures_r5/cn --font path/to/NotoSansCJKsc-Regular.otf`.
 - `python manuscript_cn/build_cn.py --out manuscript_output` builds the Chinese Word manuscript. `python manuscript_en/build_aligned_word.py --out manuscript_output` builds its complete English counterpart. The Word manuscripts follow the same section and display order.
 - In `manuscript_en/`, run `python build_aligned_tex.py` to generate the submission layout from the English manuscript source, then run `pdflatex lmapf_r5.tex`, `bibtex lmapf_r5`, and `pdflatex lmapf_r5.tex` twice. The compiler uses standard TeX Live and the included ICML style. The full text of Sections 4.1, 4.2, 5.2, and 5.4 and some large displays appear in Appendix D of the PDF.
 - Historical experiment entry points are in `historical_r4/README.md`. They are separate from the public-map engine and use different search expansion units.
@@ -56,18 +59,18 @@ The analysis reads both observed trajectories and the issued goals to check each
 
 | Dataset | Contents |
 | --- | --- |
-| `data_r5/r5_ticks.jsonl.gz` | 2,432 scheduled ticks, eligible focal and exact shared-edge intent matches |
-| `data_r5/r5_pairs.jsonl.gz` | 460 snapshots, two complete 32-step replays, original/promotion/six random orders, search statuses, immutable query reservations, independent witnesses |
-| `data_r5/r5_query_checks.csv` | 920 focal queries, four reference labels and earliest arrivals |
-| `data_r5/r5_scenario_cells.csv` | Eight validation strata, service rates, denominators, mechanism counts and per-label scene support |
-| `data_r5/r5_policy_runs.jsonl.gz` | 256 new policy runs, task-index-zero arrival times and aggregate service |
-| `data_r5/r5_policy_comparison.csv` | Eight paired policy contrasts and pointwise intervals |
-| `data_r5/r5_workload.csv` | Serial end-to-end planning timing P50/P95 and distinct operation counts |
-| `data_r5/r5_historical_checks.json` | Algorithm 1 versus fixed-goal reference outputs, controlled case B, all-source-action audit summaries and actual seed/candidate distinctions |
-| `data_r5/r5_fixtures.json` | Seven manually specified examples, expected flags, fixed reservations and legal witnesses |
-| `data_r5/r5_summary.json` | All aggregate R5 results, including repeated signatures with and without static-distance matching, and overlap with recorded reverse reservations |
+| `r5/data_r5/r5_ticks.jsonl.gz` | 2,432 scheduled ticks, eligible focal and exact shared-edge intent matches |
+| `r5/data_r5/r5_pairs.jsonl.gz` | 460 snapshots, two complete 32-step replays, original/promotion/six random orders, search statuses, immutable query reservations, independent witnesses |
+| `r5/data_r5/r5_query_checks.csv` | 920 focal queries, four reference labels and earliest arrivals |
+| `r5/data_r5/r5_scenario_cells.csv` | Eight validation strata, service rates, denominators, mechanism counts and per-label scene support |
+| `r5/data_r5/r5_policy_runs.jsonl.gz` | 256 new policy runs, task-index-zero arrival times and aggregate service |
+| `r5/data_r5/r5_policy_comparison.csv` | Eight paired policy contrasts and pointwise intervals |
+| `r5/data_r5/r5_workload.csv` | Serial end-to-end planning timing P50/P95 and distinct operation counts |
+| `r5/data_r5/r5_historical_checks.json` | Algorithm 1 versus fixed-goal reference outputs, controlled case B, all-source-action audit summaries and actual seed/candidate distinctions |
+| `r5/data_r5/r5_fixtures.json` | Seven manually specified examples, expected flags, fixed reservations and legal witnesses |
+| `r5/data_r5/r5_summary.json` | All aggregate R5 results, including repeated signatures with and without static-distance matching, and overlap with recorded reverse reservations |
 | `historical_r4/data/` | Original 367- and 480-pair data, R4 synthetic validations, legacy policy data and historical statistic outputs |
 
-The full public maps are unmodified files from Moving AI. Their URLs and checksums are given in SOURCES.md, and their freely routable areas follow the supplied bitmap. Per-robot goals are generated and are intentionally distinct from the original one-shot benchmark scenarios. The shared-edge label is given by opposing intentions on the same physical edge, and the supplementary readout checks whether it is actually reserved in that direction at the focal intended time. Completion status and capped elapsed time remain separate.
+The full public maps are unmodified files from Moving AI. Their URLs and checksums are given in [the source notes](docs/SOURCES.md), and their freely routable areas follow the supplied bitmap. Per-robot goals are generated and are intentionally distinct from the original one-shot benchmark scenarios. The shared-edge label is given by opposing intentions on the same physical edge, and the supplementary readout checks whether it is actually reserved in that direction at the focal intended time. Completion status and capped elapsed time remain separate.
 
-The three manuscript builds share the same archived inputs and results. The two Word outputs and the compiled submission PDF are listed in `manuscript_release.json`. This archive includes their build sources and an author-facing Chinese revision crosswalk.
+The three manuscript builds share the same archived inputs and results. The two Word outputs and the compiled submission PDF are listed in [the release manifest](docs/manuscript_release.json). This archive includes their build sources and an author-facing Chinese revision crosswalk.

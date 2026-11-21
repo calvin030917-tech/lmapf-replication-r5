@@ -7,8 +7,9 @@ from pathlib import Path
 from tables_r4 import build_tables as old
 
 ROOT=Path(__file__).resolve().parent.parent
-data=json.loads((ROOT/"data_r5/r5_summary.json").read_text())
-old_checks=json.loads((ROOT/"data_r5/r5_historical_checks.json").read_text())
+R5_DATA=ROOT/"r5/data_r5"
+data=json.loads((R5_DATA/"r5_summary.json").read_text())
+old_checks=json.loads((R5_DATA/"r5_historical_checks.json").read_text())
 
 
 def build_tables(lang):

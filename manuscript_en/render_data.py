@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parent
-results=json.loads((ROOT.parent/"data_r5/r5_summary.json").read_text())
+results=json.loads((ROOT.parent/"r5/data_r5/r5_summary.json").read_text())
 queries=results["queries"]
 px=results["proxies"]
 pr=results["probes_verified"]
