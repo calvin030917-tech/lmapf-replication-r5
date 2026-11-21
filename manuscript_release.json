@@ -1,0 +1,20 @@
+{
+  "release": "R5",
+  "sha256": {
+    "LMAPF_Literature_Review_CN_R5.docx": "f775a14345aebdd4a68d413c6adb13381870e571d261523910b6491d6f74fc50",
+    "LMAPF_ICML2027_Anonymous_R5.pdf": "535ce8fba280c3f7e7b27f2e7b79464cebe50da81ff630b5d220ce6ce8fb68fd",
+    "r5_summary.json": "b267ef04446bd6ee12c04d0df8a8d456882d2006f23089941c883f5229ba753b",
+    "r5_policy_runs.jsonl.gz": "74c384ffe1d93a24db250160d89d0ad324f678a21d11cd361c8f7edde9bbde0e",
+    "r5_pairs.jsonl.gz": "848603ab365278b2390172a539fe951f2a8e0c2fef26e5e17e5895b705b67850",
+    "r5_historical_checks.json": "4b606f4b8aaeb243578ae10d33a58d162df25dde26d2ecf87b7a103246fb259c",
+    "LMAPF_Literature_Review_EN_R5.docx": "dc48447c1b5320da25088fe6896794a11c84eb703cf3f458f58054f20cdc9958"
+  },
+  "pdf_main_body_pages": 7,
+  "english_word_matches_chinese_section_order": true,
+  "pdf_full_sections_in_appendix_d": [
+    "4.1",
+    "4.2",
+    "5.2",
+    "5.4"
+  ]
+}

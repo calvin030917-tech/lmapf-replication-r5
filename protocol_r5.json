@@ -1,0 +1,28 @@
+{
+  "maps": {
+    "w1": {"file": "warehouse-10-20-10-2-1.map", "sha256": "c8d1b2f24788ed6bd1ccf45065b96b4ce82d65f88c72de750e03e2758637bff0"},
+    "w2": {"file": "warehouse-10-20-10-2-2.map", "sha256": "4f06e82c2b87238daa8e308086afdba701112bf023e94e740e5bf9508a6adec3"}
+  },
+  "fleets": [24, 48],
+  "expansions_per_robot": [6, 18],
+  "diagnostic_seeds": [6101, 6116],
+  "policy_seeds": [7101, 7116],
+  "window": 10,
+  "executed_per_round": 2,
+  "followup": 32,
+  "duration": 240,
+  "warmup": 48,
+  "first_landmark": 56,
+  "last_landmark": 200,
+  "landmark_stride": 8,
+  "max_pairs_per_scene_and_resource_label": 2,
+  "direction_comparator_random_orders": 6,
+  "route_intent_lookahead": 6,
+  "max_opposed_entry_offset": 2,
+  "reference_extension": 8,
+  "max_focal_static_distance": 24,
+  "contrast_cluster_min_per_label": 12,
+  "task_cohort_followup": 64,
+  "bootstrap_draws": 10000,
+  "bootstrap_seed": 5180429
+}

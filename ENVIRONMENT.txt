@@ -1,0 +1,10 @@
+Environment: R5 public validation, analysis and build
+CPU: INTEL(R) XEON(R) PLATINUM 8573C
+Operating system: Linux-6.18.57-x86_64-with-glibc2.41
+Python: 3.12.14
+NumPy: 2.3.5
+Matplotlib: 3.10.8
+python-docx: 1.2.0
+Pillow: 13.0.0
+pdfTeX: pdfTeX 3.141592653-2.6-1.40.26 (TeX Live 2025/dev/Debian)
+Timing: Seed 6101 in each stratum, single process, 96 warmed-up planning rounds, timings include order, seed construction, interval search, reservation changes and validity checks.
