@@ -1,0 +1,5 @@
+﻿layout,n,multiplier,seed,source,time,budget,focus,rank,gate_delta,task_delta,baseline_gate,treatment_gate,baseline_task,treatment_task
+single,24,5,3006,congestion,108,120,1,7,-2,0,9,7,15,15
+single,24,14,3001,congestion,146,336,2,15,6,4,24,30,28,
+single,24,14,3016,congestion,110,336,23,15,-3,-1,16,13,21,20
+single,24,14,3016,congestion,120,336,7,7,3,2,14,17,24,26

@@ -1,0 +1,277 @@
+{
+  "source_n": 128,
+  "landmarks": 2432,
+  "pairs": 460,
+  "queries": 920,
+  "focal_capped_change": -0.31521739130434784,
+  "e_counts": [
+    109,
+    52,
+    30
+  ],
+  "all_source_active": true,
+  "source_range": [
+    52.083333333333336,
+    154.16666666666669
+  ],
+  "focal_finish_pattern": {
+    "11": 429,
+    "original_at_32": 4,
+    "promoted_at_32": 3,
+    "00": 22,
+    "10": 2,
+    "01": 7
+  },
+  "other_delay_count": {
+    "0": 380,
+    "5": 7,
+    "3": 14,
+    "1": 23,
+    "4": 7,
+    "2": 17,
+    "6": 5,
+    "10": 1,
+    "7": 3,
+    "9": 1,
+    "8": 1,
+    "12": 1
+  },
+  "probes_verified": {
+    "budget": {
+      "positive": 59,
+      "fp": 0,
+      "fn": 0
+    },
+    "reservation": {
+      "positive": 178,
+      "fp": 0,
+      "fn": 0
+    },
+    "goal_rule": {
+      "positive": 156,
+      "fp": 0,
+      "fn": 0
+    },
+    "horizon": {
+      "positive": 73,
+      "fp": 0,
+      "fn": 0
+    }
+  },
+  "multilabel": 31,
+  "agree": 920,
+  "time_checks": 3680,
+  "time_disagree": 0,
+  "proxies": {
+    "proposed_direction": {
+      "tp": 1,
+      "fp": 2,
+      "fn": 38,
+      "tn": 419,
+      "early_other_delay": 1
+    },
+    "proposed_distance": {
+      "tp": 22,
+      "fp": 8,
+      "fn": 17,
+      "tn": 413,
+      "early_other_delay": 17
+    }
+  },
+  "repeated": {
+    "repeated_signatures": 25,
+    "repeated_pair_count": 53,
+    "different_mechanism_group": 14,
+    "different_service_group": 0,
+    "example_different_mechanism": [
+      {
+        "layout": "w1",
+        "n": 24,
+        "cap": 144,
+        "seed": 6101,
+        "time": 160,
+        "focus": 17,
+        "rank": 4,
+        "match": true,
+        "delta": 0,
+        "original": 26,
+        "promoted": 26,
+        "n_others_later": 0,
+        "largest_other_delay": 0,
+        "direction": false,
+        "distance": false,
+        "e1": false,
+        "e2": false,
+        "e3": false,
+        "baseline_budget": false,
+        "baseline_reservation": false,
+        "baseline_goal_rule": false,
+        "baseline_horizon": false,
+        "baseline_query_status": "window",
+        "promoted_budget": false,
+        "promoted_reservation": false,
+        "promoted_goal_rule": false,
+        "promoted_horizon": false,
+        "promoted_query_status": "window"
+      },
+      {
+        "layout": "w1",
+        "n": 24,
+        "cap": 144,
+        "seed": 6110,
+        "time": 152,
+        "focus": 1,
+        "rank": 4,
+        "match": true,
+        "delta": 0,
+        "original": 16,
+        "promoted": 16,
+        "n_others_later": 0,
+        "largest_other_delay": 0,
+        "direction": false,
+        "distance": false,
+        "e1": false,
+        "e2": false,
+        "e3": false,
+        "baseline_budget": false,
+        "baseline_reservation": true,
+        "baseline_goal_rule": false,
+        "baseline_horizon": false,
+        "baseline_query_status": "window",
+        "promoted_budget": false,
+        "promoted_reservation": true,
+        "promoted_goal_rule": false,
+        "promoted_horizon": false,
+        "promoted_query_status": "window"
+      }
+    ]
+  },
+  "repeated_with_initial": {
+    "repeated_signatures": 4,
+    "repeated_pair_count": 8,
+    "different_mechanism_group": 2,
+    "different_service_group": 0,
+    "example_different_mechanism": [
+      {
+        "layout": "w2",
+        "n": 24,
+        "cap": 144,
+        "seed": 6104,
+        "time": 168,
+        "focus": 5,
+        "rank": 4,
+        "match": false,
+        "delta": 0,
+        "original": 3,
+        "promoted": 3,
+        "n_others_later": 2,
+        "largest_other_delay": 8,
+        "direction": false,
+        "distance": false,
+        "e1": true,
+        "e2": false,
+        "e3": false,
+        "baseline_budget": false,
+        "baseline_reservation": true,
+        "baseline_goal_rule": false,
+        "baseline_horizon": false,
+        "baseline_query_status": "skipped",
+        "promoted_budget": false,
+        "promoted_reservation": true,
+        "promoted_goal_rule": false,
+        "promoted_horizon": false,
+        "promoted_query_status": "window"
+      },
+      {
+        "layout": "w2",
+        "n": 24,
+        "cap": 144,
+        "seed": 6110,
+        "time": 176,
+        "focus": 5,
+        "rank": 4,
+        "match": false,
+        "delta": 0,
+        "original": 8,
+        "promoted": 8,
+        "n_others_later": 0,
+        "largest_other_delay": 0,
+        "direction": false,
+        "distance": false,
+        "e1": false,
+        "e2": false,
+        "e3": false,
+        "baseline_budget": false,
+        "baseline_reservation": false,
+        "baseline_goal_rule": true,
+        "baseline_horizon": false,
+        "baseline_query_status": "goal",
+        "promoted_budget": false,
+        "promoted_reservation": false,
+        "promoted_goal_rule": true,
+        "promoted_horizon": false,
+        "promoted_query_status": "goal"
+      }
+    ]
+  },
+  "reserved_intent_overlap": {
+    "baseline": {
+      "reverse_edge": 122,
+      "tagged": 256
+    },
+    "promoted": {
+      "reverse_edge": 123,
+      "tagged": 256
+    }
+  },
+  "directions": [
+    {
+      "kind": "baseline",
+      "1": 239,
+      "-1": 103,
+      "0": 118
+    },
+    {
+      "kind": "promoted",
+      "1": 212,
+      "0": 122,
+      "-1": 126
+    },
+    {
+      "kind": "random",
+      "1": 1423,
+      "0": 721,
+      "-1": 616
+    }
+  ],
+  "resource": {
+    "independent_scenarios": [
+      64,
+      64
+    ],
+    "tradeoffs_and_pairs": [
+      [
+        4,
+        204
+      ],
+      [
+        26,
+        256
+      ]
+    ],
+    "diff": 8.19546568627451,
+    "interval": [
+      4.375994924974977,
+      11.919868468880445
+    ],
+    "valid_draws": 10000
+  },
+  "environment": {
+    "python": "3.12.14",
+    "versions": {
+      "numpy": "2.3.5"
+    },
+    "system": "Linux-6.18.57-x86_64-with-glibc2.41",
+    "machine": "x86_64"
+  }
+}

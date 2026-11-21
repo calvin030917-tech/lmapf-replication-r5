@@ -1,0 +1,692 @@
+[
+  {
+    "case": "budget",
+    "map": [
+      "......."
+    ],
+    "start": 0,
+    "goal": 4,
+    "other_paths": [],
+    "window": 6,
+    "cap": 1,
+    "query": {
+      "state": "cut_window",
+      "expanded": 1,
+      "checks": 1,
+      "path": [
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "expected": {
+      "budget": true,
+      "reservation": false,
+      "goal_rule": false,
+      "horizon": false
+    },
+    "probes": {
+      "hold": {
+        "interval_earliest": 4,
+        "reference_earliest": 4,
+        "reference_path": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          4,
+          4
+        ]
+      },
+      "release": {
+        "interval_earliest": 4,
+        "reference_earliest": 4,
+        "reference_path": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          3,
+          2
+        ]
+      },
+      "free_release": {
+        "interval_earliest": 4,
+        "reference_earliest": 4,
+        "reference_path": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          3,
+          2
+        ]
+      },
+      "extended_release": {
+        "interval_earliest": 4,
+        "reference_earliest": 4,
+        "reference_path": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          3,
+          2,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    "estimate": {
+      "budget": true,
+      "reservation": false,
+      "goal_rule": false,
+      "horizon": false
+    },
+    "reference": {
+      "budget": true,
+      "reservation": false,
+      "goal_rule": false,
+      "horizon": false
+    }
+  },
+  {
+    "case": "reservation",
+    "map": [
+      "......."
+    ],
+    "start": 0,
+    "goal": 4,
+    "other_paths": [
+      [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ]
+    ],
+    "window": 6,
+    "cap": 100,
+    "query": {
+      "state": "window",
+      "expanded": 2,
+      "checks": 2,
+      "path": [
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "expected": {
+      "budget": false,
+      "reservation": true,
+      "goal_rule": false,
+      "horizon": false
+    },
+    "probes": {
+      "hold": {
+        "interval_earliest": null,
+        "reference_earliest": null,
+        "reference_path": []
+      },
+      "release": {
+        "interval_earliest": null,
+        "reference_earliest": null,
+        "reference_path": []
+      },
+      "free_release": {
+        "interval_earliest": 4,
+        "reference_earliest": 4,
+        "reference_path": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          3,
+          2
+        ]
+      },
+      "extended_release": {
+        "interval_earliest": null,
+        "reference_earliest": null,
+        "reference_path": []
+      }
+    },
+    "estimate": {
+      "budget": false,
+      "reservation": true,
+      "goal_rule": false,
+      "horizon": false
+    },
+    "reference": {
+      "budget": false,
+      "reservation": true,
+      "goal_rule": false,
+      "horizon": false
+    }
+  },
+  {
+    "case": "goal_rule",
+    "map": [
+      "......."
+    ],
+    "start": 0,
+    "goal": 1,
+    "other_paths": [
+      [
+        2,
+        2,
+        1,
+        2,
+        2,
+        2,
+        2
+      ]
+    ],
+    "window": 6,
+    "cap": 100,
+    "query": {
+      "state": "goal",
+      "expanded": 1,
+      "checks": 2,
+      "path": [
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "expected": {
+      "budget": false,
+      "reservation": false,
+      "goal_rule": true,
+      "horizon": false
+    },
+    "probes": {
+      "hold": {
+        "interval_earliest": 3,
+        "reference_earliest": 3,
+        "reference_path": [
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "release": {
+        "interval_earliest": 1,
+        "reference_earliest": 1,
+        "reference_path": [
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "free_release": {
+        "interval_earliest": 1,
+        "reference_earliest": 1,
+        "reference_path": [
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "extended_release": {
+        "interval_earliest": 1,
+        "reference_earliest": 1,
+        "reference_path": [
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    "estimate": {
+      "budget": false,
+      "reservation": false,
+      "goal_rule": true,
+      "horizon": false
+    },
+    "reference": {
+      "budget": false,
+      "reservation": false,
+      "goal_rule": true,
+      "horizon": false
+    }
+  },
+  {
+    "case": "horizon",
+    "map": [
+      "......."
+    ],
+    "start": 0,
+    "goal": 5,
+    "other_paths": [],
+    "window": 3,
+    "cap": 100,
+    "query": {
+      "state": "window",
+      "expanded": 3,
+      "checks": 5,
+      "path": [
+        0,
+        1,
+        2,
+        3
+      ]
+    },
+    "expected": {
+      "budget": false,
+      "reservation": false,
+      "goal_rule": false,
+      "horizon": true
+    },
+    "probes": {
+      "hold": {
+        "interval_earliest": null,
+        "reference_earliest": null,
+        "reference_path": []
+      },
+      "release": {
+        "interval_earliest": null,
+        "reference_earliest": null,
+        "reference_path": []
+      },
+      "free_release": {
+        "interval_earliest": null,
+        "reference_earliest": null,
+        "reference_path": []
+      },
+      "extended_release": {
+        "interval_earliest": 5,
+        "reference_earliest": 5,
+        "reference_path": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          4,
+          3,
+          2,
+          1,
+          0,
+          0
+        ]
+      }
+    },
+    "estimate": {
+      "budget": false,
+      "reservation": false,
+      "goal_rule": false,
+      "horizon": true
+    },
+    "reference": {
+      "budget": false,
+      "reservation": false,
+      "goal_rule": false,
+      "horizon": true
+    }
+  },
+  {
+    "case": "clear",
+    "map": [
+      "......."
+    ],
+    "start": 0,
+    "goal": 4,
+    "other_paths": [],
+    "window": 6,
+    "cap": 100,
+    "query": {
+      "state": "goal",
+      "expanded": 4,
+      "checks": 7,
+      "path": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        4,
+        4
+      ]
+    },
+    "expected": {
+      "budget": false,
+      "reservation": false,
+      "goal_rule": false,
+      "horizon": false
+    },
+    "probes": {
+      "hold": {
+        "interval_earliest": 4,
+        "reference_earliest": 4,
+        "reference_path": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          4,
+          4
+        ]
+      },
+      "release": {
+        "interval_earliest": 4,
+        "reference_earliest": 4,
+        "reference_path": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          3,
+          2
+        ]
+      },
+      "free_release": {
+        "interval_earliest": 4,
+        "reference_earliest": 4,
+        "reference_path": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          3,
+          2
+        ]
+      },
+      "extended_release": {
+        "interval_earliest": 4,
+        "reference_earliest": 4,
+        "reference_path": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          3,
+          2,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    "estimate": {
+      "budget": false,
+      "reservation": false,
+      "goal_rule": false,
+      "horizon": false
+    },
+    "reference": {
+      "budget": false,
+      "reservation": false,
+      "goal_rule": false,
+      "horizon": false
+    }
+  },
+  {
+    "case": "budget_goal_rule",
+    "map": [
+      "......."
+    ],
+    "start": 0,
+    "goal": 1,
+    "other_paths": [
+      [
+        2,
+        2,
+        1,
+        2,
+        2,
+        2,
+        2
+      ]
+    ],
+    "window": 6,
+    "cap": 0,
+    "query": {
+      "state": "skipped",
+      "expanded": 0,
+      "checks": 0,
+      "path": []
+    },
+    "expected": {
+      "budget": true,
+      "reservation": false,
+      "goal_rule": true,
+      "horizon": false
+    },
+    "probes": {
+      "hold": {
+        "interval_earliest": 3,
+        "reference_earliest": 3,
+        "reference_path": [
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "release": {
+        "interval_earliest": 1,
+        "reference_earliest": 1,
+        "reference_path": [
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "free_release": {
+        "interval_earliest": 1,
+        "reference_earliest": 1,
+        "reference_path": [
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "extended_release": {
+        "interval_earliest": 1,
+        "reference_earliest": 1,
+        "reference_path": [
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    "estimate": {
+      "budget": true,
+      "reservation": false,
+      "goal_rule": true,
+      "horizon": false
+    },
+    "reference": {
+      "budget": true,
+      "reservation": false,
+      "goal_rule": true,
+      "horizon": false
+    }
+  },
+  {
+    "case": "reservation_and_horizon",
+    "map": [
+      ".......",
+      "TT.TTTT"
+    ],
+    "start": 0,
+    "goal": 4,
+    "other_paths": [
+      [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        9
+      ]
+    ],
+    "window": 6,
+    "cap": 100,
+    "query": {
+      "state": "window",
+      "expanded": 2,
+      "checks": 3,
+      "path": [
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        2
+      ]
+    },
+    "expected": {
+      "budget": false,
+      "reservation": true,
+      "goal_rule": false,
+      "horizon": true
+    },
+    "probes": {
+      "hold": {
+        "interval_earliest": null,
+        "reference_earliest": null,
+        "reference_path": []
+      },
+      "release": {
+        "interval_earliest": null,
+        "reference_earliest": null,
+        "reference_path": []
+      },
+      "free_release": {
+        "interval_earliest": 4,
+        "reference_earliest": 4,
+        "reference_path": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          3,
+          2
+        ]
+      },
+      "extended_release": {
+        "interval_earliest": 8,
+        "reference_earliest": 8,
+        "reference_path": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          2,
+          3,
+          4,
+          3,
+          2,
+          1,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    "estimate": {
+      "budget": false,
+      "reservation": true,
+      "goal_rule": false,
+      "horizon": true
+    },
+    "reference": {
+      "budget": false,
+      "reservation": true,
+      "goal_rule": false,
+      "horizon": true
+    }
+  }
+]

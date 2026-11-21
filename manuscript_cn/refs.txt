@@ -1,0 +1,20 @@
+REF|[1] STERN R, STURTEVANT N R, FELNER A, et al. Multi-Agent Pathfinding: Definitions, Variants, and Benchmarks[C]//SoCS. 2019: 151–158.|https://doi.org/10.1609/socs.v10i1.18510
+REF|[2] MA H, LI J, KUMAR T K S, KOENIG S. Lifelong Multi-Agent Path Finding for Online Pickup and Delivery Tasks[C]//AAMAS. 2017: 837–845.|https://arxiv.org/abs/1705.10868
+REF|[3] LI J, TINKA A, KIESEL S, et al. Lifelong Multi-Agent Path Finding in Large-Scale Warehouses[C]//AAAI. 2021: 11272–11281.|https://doi.org/10.1609/aaai.v35i13.17344
+REF|[4] ASANO H, YONETANI R, NISHIMURA M, KOZUNO T. Counterfactual Fairness Filter for Fair-Delay Multi-Robot Navigation[C]//AAMAS. 2023: 887–895.|https://www.ifaamas.org/Proceedings/aamas2023/pdfs/p887.pdf
+REF|[5] PHILLIPS M, LIKHACHEV M. SIPP: Safe Interval Path Planning for Dynamic Environments[C]//ICRA. 2011: 5628–5635.|https://doi.org/10.1109/ICRA.2011.5980306
+REF|[6] MA H, HARABOR D, STUCKEY P J, LI J, KOENIG S. Searching with Consistent Prioritization for Multi-Agent Path Finding[C]//AAAI. 2019: 7643–7650.|https://doi.org/10.1609/aaai.v33i01.33017643
+REF|[7] OKUMURA K, MACHIDA M, DÉFAGO X, TAMURA Y. Priority Inheritance with Backtracking for Iterative Multi-Agent Path Finding[J]. Artificial Intelligence, 2022, 310: 103752.|https://doi.org/10.1016/j.artint.2022.103752
+REF|[8] KLANČAR G, BOŠNAK M, ZALETELJ V, VRABIČ R, ZDEŠAR A. Elevating Priorities for an Efficient and Complete Lifelong Multi-AGV Pathfinding on Roadmaps[J]. Robotics and Autonomous Systems, 2026, 197: 105295.|https://doi.org/10.1016/j.robot.2025.105295
+REF|[9] VEERAPANENI R, SALEEM M S, LI J, LIKHACHEV M. Windowed MAPF with Completeness Guarantees[C]//AAAI. 2025, 39(22): 23323–23332.|https://doi.org/10.1609/aaai.v39i22.34499
+REF|[10] MORAG J, ZHANG Y, KOYFMAN D, et al. Prioritised Planning with Guarantees[C]//SoCS. 2024, 17(1): 82–90.|https://doi.org/10.1609/socs.v17i1.31545
+REF|[11] CHEN Z, HARABOR D, LI J, STUCKEY P J. Traffic Flow Optimisation for Lifelong Multi-Agent Path Finding[C]//AAAI. 2024: 20674–20682.|https://doi.org/10.1609/aaai.v38i18.30054
+REF|[12] ZANG H, ZHANG Y, JIANG H, et al. Online Guidance Graph Optimization for Lifelong Multi-Agent Path Finding[C]//AAAI. 2025: 14726–14735.|https://doi.org/10.1609/aaai.v39i14.33614
+REF|[13] ZHENG H, MA Y, ARAKI B, CHEN J, WU C. Learning-guided Prioritized Planning for Lifelong Multi-Agent Path Finding in Warehouse Automation[J]. Journal of Artificial Intelligence Research, 2026, 85: Article 28.|https://doi.org/10.1613/jair.1.20611
+REF|[14] ANAND A, ALI D, BANERJEE S. Fairness Driven Multi-Agent Path Finding Problem[C]//ICAART. 2026, 1: 640–647.|https://doi.org/10.5220/0014485000004052
+REF|[15] ZHANG Z, GONG Y, YUAN Z, CHEN W. Robotic Warehouse Systems Considering Dynamic Priority[J]. Transportation Research Part E: Logistics and Transportation Review, 2024, 192: 103779.|https://doi.org/10.1016/j.tre.2024.103779
+REF|[16] ZHANG T, VEERAPANENI R, CHAN S H, LI J, LIKHACHEV M. Dynamic Agent Grouping ECBS: Scaling Windowed Multi-Agent Path Finding with Completeness Guarantees[C]//AAAI. 2026, 40(35): 29911–29920.|https://doi.org/10.1609/aaai.v40i35.40238
+REF|[17] LIANG R, VEERAPANENI R, HARABOR D, LI J, LIKHACHEV M. Real-Time LaCAM for Real-Time MAPF[C]//SoCS. 2025, 18(1): 196–200.|https://doi.org/10.1609/socs.v18i1.35993
+REF|[18] ZHANG Y, JIANG H, BHATT V, NIKOLAIDIS S, LI J. Guidance Graph Optimization for Lifelong Multi-Agent Path Finding[C]//IJCAI. 2024: 311–320.|https://doi.org/10.24963/ijcai.2024/35
+
+REF|[19] MOVING AI LAB. Multi-Agent Pathfinding Benchmarks. Warehouse grid maps.|https://www.movingai.com/benchmarks/mapf.html

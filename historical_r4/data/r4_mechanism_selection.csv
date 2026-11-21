@@ -1,0 +1,17 @@
+﻿layout,n,multiplier,source,sampled,budget_eligible,budget_tested,route_tested,route_alt
+single,12,5,age,7,0,0,3,3
+single,12,5,congestion,1,1,1,1,1
+single,12,14,age,7,0,0,3,3
+single,12,14,congestion,16,0,0,3,3
+single,24,5,age,37,2,2,3,0
+single,24,5,congestion,35,18,3,3,2
+single,24,14,age,51,0,0,3,1
+single,24,14,congestion,42,1,1,3,3
+bypass,12,5,age,2,0,0,2,2
+bypass,12,5,congestion,3,2,2,3,3
+bypass,12,14,age,12,0,0,3,3
+bypass,12,14,congestion,10,0,0,3,3
+bypass,24,5,age,22,2,2,3,3
+bypass,24,5,congestion,20,8,3,3,2
+bypass,24,14,age,53,0,0,3,3
+bypass,24,14,congestion,49,0,0,3,3

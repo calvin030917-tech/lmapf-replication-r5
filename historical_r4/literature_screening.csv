@@ -1,0 +1,40 @@
+﻿来源,序位,命中题名,URL,文献编号或排除号,处置,理由
+Q1,1,Learning-guided Prioritized Planning for Lifelong Multi-Agent Path Finding in Warehouse Automation,https://doi.org/10.1613/jair.1.20611,5,纳入,相关的原始研究
+Q1,2,Lifelong Multi-Agent Path Finding in Large-Scale Warehouses,https://ojs.aaai.org/index.php/AAAI/article/view/17344,3,纳入,相关的原始研究
+Q1,3,Learning-guided Prioritized Planning for Lifelong Multi-Agent Path Finding in Warehouse Automation,https://arxiv.org/abs/2603.23838,5,合并,同研究的版本、镜像或跨组再现，正式版在正文列目
+Q1,4,Lifelong Multi-Agent Path Finding in Large-Scale Warehouses - Robotics Institute Carnegie Mellon University,https://publications.ri.cmu.edu/lifelong-multi-agent-path-finding-in-large-scale-warehouses,3,合并,同研究的版本、镜像或跨组再现，正式版在正文列目
+Q1,5,Lifelong Multi-Agent Path Finding in Large-Scale Warehouses,https://mlanthology.org/aaai/2021/li2021aaai-lifelong/,3,合并,同研究的版本、镜像或跨组再现，正式版在正文列目
+Q1,6,Lifelong Multi-Agent Path Finding in Large-Scale Warehouses,https://arxiv.org/abs/2005.07371,3,合并,同研究的版本、镜像或跨组再现，正式版在正文列目
+Q1,7,"Lifelong Multi-Agent Path Finding in Large-Scale Warehouses*Jiaoyang Li,<sup>1</sup> Andrew Tinka,<sup>2</sup> Scott Kiesel,<sup>2</sup>",https://par.nsf.gov/servlets/purl/10285107,3,合并,同研究的版本、镜像或跨组再现，正式版在正文列目
+Q2,1,A Scalable Post-Processing Pipeline for Large-Scale Free-Space Multi-Agent Path Planning with PIBT,https://www.mdpi.com/2227-7390/14/7/1195,X1,排除,自由空间轨迹后处理，未直接比较本文的优先序、窗口完备性或任务时效
+Q2,2,Elevating priorities for an efficient and complete lifelong multi-AGV pathfinding on roadmaps,https://www.sciencedirect.com/science/article/abs/pii/S0921889025003926,9,纳入,相关的原始研究
+Q2,3,Searching with Consistent Prioritization for Multi-Agent Path Finding,https://arxiv.org/abs/1812.06356,7,纳入,相关的原始研究
+Q2,4,Priority Inheritance with Backtracking for Iterative Multi-agent Path Finding | IJCAI,https://ijcai.org/proceedings/2019/76,8,纳入,相关的原始研究
+Q2,5,Searching with Consistent Prioritization for Multi-Agent Path Finding,https://harabor.net/data/papers/mhslk_swcpfmapf_aaai19.pdf,7,合并,同研究的版本、镜像或跨组再现，正式版在正文列目
+Q2,6,Prioritised Planning with Guarantees,https://ojs.aaai.org/index.php/SOCS/article/download/31545/33705/35602,13,纳入,相关的原始研究
+Q2,7,Searching with Consistent Prioritization for Multi-Agent Path Finding∗,https://www2.cs.sfu.ca/~hangma/pub/aaai19a.pdf,7,合并,同研究的版本、镜像或跨组再现，正式版在正文列目
+Q3,1,Windowed MAPF with Completeness Guarantees,https://ojs.aaai.org/index.php/AAAI/article/view/34499,10,纳入,相关的原始研究
+Q3,2,WinC-MAPF with Bounded Suboptimal Solvers Appe,https://publications.ri.cmu.edu/storage/publications/2026/04/Rishi_Thesis_20260428101235.pdf,X2,排除,学位论文，相关结果已以独立会议论文作为原始证据纳入
+Q3,3,Windowed MAPF with Completeness Guarantees,https://mapf.info/abstracts/JLi25d.html,10,合并,同研究的版本、镜像或跨组再现，正式版在正文列目
+Q3,4,Windowed MAPF with Completeness Guarantees,https://arxiv.org/abs/2410.01798,10,合并,同研究的版本、镜像或跨组再现，正式版在正文列目
+Q3,5,mapf.info | Main / Publication,https://mapf.info/index.php/Main.JLi26g,11,纳入,相关的原始研究
+Q3,6,Dynamic Agent Grouping ECBS: Scaling Windowed Multi-Agent Path Finding with Completeness Guarantees,https://arxiv.org/abs/2509.15381,11,合并,同研究的版本、镜像或跨组再现，正式版在正文列目
+Q3,7,Real-Time LaCAM for Real-Time MAPF,https://ojs.aaai.org/index.php/SOCS/article/download/35993/38148/40065,12,纳入,相关的原始研究
+Q4,1,Counterfactual Fairness Filter for Fair-Delay Multi-Robot Navigation,https://arxiv.org/abs/2305.11465,4,纳入,相关的原始研究
+Q4,2,Counterfactual Fairness Filter forFair-Delay Multi-Robot Navigation,https://ifmas.csc.liv.ac.uk/Proceedings/aamas2023/pdfs/p887.pdf,4,合并,同研究的版本、镜像或跨组再现，正式版在正文列目
+Q4,3,Fairness Driven Multi-Agent Path Finding Problem,https://arxiv.org/abs/2601.10123,17,纳入,相关的原始研究
+Q4,4,Counterfactual Fairness Filter for Fair-Delay Multi-Robot Navigation,https://omron-sinicx.github.io/ncf2/,4,合并,同研究的版本、镜像或跨组再现，正式版在正文列目
+Q4,5,"AAMAS 2023, May 29–June 2, 2023, London, United KingdomSession 3B: Multiagent Path FindingCounterfactual Fairness Filter for",https://www.ifaamas.org/Proceedings/aamas2023/pdfs/p887.pdf,4,合并,同研究的版本、镜像或跨组再现，正式版在正文列目
+Q4,6,Fairness Driven Multi-Agent Path Finding Problem,https://www.scitepress.org/Papers/2026/144850/144850.pdf,17,合并,同研究的版本、镜像或跨组再现，正式版在正文列目
+Q4,7,,https://www.scitepress.org/publishedPapers/2026/144850/pdf/index.html,17,合并,同研究的版本、镜像或跨组再现，正式版在正文列目
+Q5,1,Online Guidance Graph Optimization for Lifelong Multi-Agent Path Finding,https://ojs.aaai.org/index.php/AAAI/article/view/33614,16,纳入,相关的原始研究
+Q5,2,Traffic Flow Optimisation for Lifelong Multi-Agent Path Finding,https://ojs.aaai.org/index.php/AAAI/article/view/30054,14,纳入,相关的原始研究
+Q5,3,Guidance Graph Optimization for Lifelong Multi-Agent Path Finding | IJCAI,https://ijcai.org/proceedings/2024/35,15,纳入,相关的原始研究
+Q5,4,Traffic Flow Optimisation for Lifelong Multi-Agent Path Finding (Extended Abstract),https://ojs.aaai.org/index.php/SOCS/article/view/31573,14,合并,同研究的版本、镜像或跨组再现，正式版在正文列目
+Q5,5,Guidance Graph Optimization for Lifelong Multi-Agent Path Finding,https://www.ijcai.org/proceedings/2024/0035.pdf,15,合并,同研究的版本、镜像或跨组再现，正式版在正文列目
+Q5,6,Online Guidance Graph Optimization for Lifelong Multi-Agent Path Finding | Scilit,https://www.scilit.com/publications/8a67d6037a4276569f8d199c86921d91,16,合并,同研究的版本、镜像或跨组再现，正式版在正文列目
+Q5,7,Learning-guided Prioritized Planning for Lifelong Multi-Agent Path Finding in Warehouse Automation,https://doi.org/10.1613/jair.1.20611,5,合并,同研究的版本、镜像或跨组再现，正式版在正文列目
+补查,1,"Multi-Agent Pathfinding: Definitions, Variants, and Benchmarks",https://doi.org/10.1609/socs.v10i1.18510,1,纳入,冲突与停留语义基础
+补查,2,Lifelong Multi-Agent Path Finding for Online Pickup and Delivery Tasks,https://arxiv.org/abs/1705.10868,2,纳入,持续取送问题边界
+补查,3,SIPP: Safe Interval Path Planning for Dynamic Environments,https://doi.org/10.1109/ICRA.2011.5980306,6,纳入,单车动态障碍搜索基础
+补查,4,Robotic warehouse systems considering dynamic priority,https://doi.org/10.1016/j.tre.2024.103779,18,纳入,仓库订单时效的邻近评价层级
