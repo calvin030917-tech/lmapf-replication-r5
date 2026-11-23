@@ -5,31 +5,36 @@ import csv
 import gzip
 import itertools
 import json
+import math
 from pathlib import Path
 import platform
+from random import Random
 import sys
 
 import numpy as np
 
 from interval_planner import Query
 from reference import caps, inspect_query, replay_events
-from warehouse import CFG,H,W,load_map
+from run_r5 import direction, keys
+from warehouse import CFG, E, H, W, load_map
 
 ROOT=Path(__file__).resolve().parent
 DATA=ROOT/"data_r5"
 FLAGS=("budget","reservation","goal_rule","horizon")
 ARMS=("baseline","promoted")
+POLICIES = ("dual", "distance")
+WORKLOAD_FIELDS = ("seed_tests", "interval_expanded", "edge_tests", "reservation_writes", "wall_ms")
 
 
-def read(name):
-    p=DATA/name
+def read(data_dir, name):
+    p=data_dir/name
     op=gzip.open if p.suffix==".gz" else open
     with op(p,"rt",encoding="utf-8") as fl:
         return [json.loads(t) for t in fl]
 
 
-def csvfile(name, rows):
-    with (DATA/name).open("w",newline="",encoding="utf-8-sig") as f:
+def csvfile(data_dir, name, rows):
+    with (data_dir/name).open("w",newline="",encoding="utf-8-sig") as f:
         writer=csv.DictWriter(f,fieldnames=list(rows[0]))
         writer.writeheader()
         writer.writerows(rows)
@@ -147,14 +152,23 @@ def rate_contrast(rows, source):
 
 
 def policies(all_rows):
+    expected = set(itertools.product(keys("policy"), POLICIES))
+    check_run_coverage(((run_key(row), row["policy"]) for row in all_rows), expected, "policy run")
     edge=CFG["task_cohort_followup"]
     groups=defaultdict(dict)
     for r in all_rows:
-        groups[(*cell(r),r["seed"])][r["policy"]]=r
+        key = run_key(r)
+        location = f"Policy run {key} {r['policy']}"
+        check_logged_fields(r, location, cap=r["n"] * r["multiplier"])
+        for field in ("job0_first", "job0_initial_length"):
+            if len(r[field]) != r["n"]:
+                raise ValueError(f"{location} {field} expected {r['n']} entries, found {len(r[field])}")
+        groups[key][r["policy"]]=r
     split=defaultdict(list)
     for (*s,seed),a in groups.items():
         d,l=a["dual"],a["distance"]
-        assert d["job0_initial_length"]==l["job0_initial_length"]
+        if d["job0_initial_length"] != l["job0_initial_length"]:
+            raise ValueError(f"Policy run {(*s, seed)} initial task lengths differ between policies")
         outcome=np.array([d["rate"]-l["rate"],100*(d["overdue"]-l["overdue"]),
                            100*mean([(x is not None and x<=edge)-(y is not None and y<=edge)
                                      for x,y in zip(d["job0_first"],l["job0_first"])]),
@@ -220,43 +234,191 @@ def reserved_intent_overlap(rows):
     return found
 
 
+def check_logged_fields(record, location, **expected):
+    for field, value in expected.items():
+        if record[field] != value:
+            raise ValueError(f"{location} {field} expected {value!r}, found {record[field]!r}")
+
+
+def run_key(record):
+    return (*cell(record), record["seed"])
+
+
+def snapshot_key(record):
+    return (*run_key(record), record["time"])
+
+
+def check_run_coverage(record_keys, expected, kind):
+    counts = Counter(record_keys)
+    for key, count in counts.items():
+        if count > 1:
+            raise ValueError(f"Duplicate {kind} {key}")
+        if key not in expected:
+            raise ValueError(f"Unexpected {kind} {key}")
+    missing = expected - counts.keys()
+    if missing:
+        raise ValueError(f"Missing {kind} {min(missing)} ({len(missing)} missing)")
+
+
+def check_timing(rows):
+    first_seed = CFG["diagnostic_seeds"][0]
+    expected = {key for key in keys("diagnostic") if key[-1] == first_seed}
+    check_run_coverage(map(run_key, rows), expected, "timing run")
+    for row in rows:
+        location = f"Timing run {run_key(row)}"
+        check_logged_fields(row, location, cap=row["n"] * row["multiplier"], policy="density")
+        for field in WORKLOAD_FIELDS:
+            values = row["timing"].get(field)
+            if (not isinstance(values, list) or len(values) != 2
+                    or not all(isinstance(value, (int, float)) and math.isfinite(value) for value in values)
+                    or not 0 <= values[0] <= values[1]):
+                raise ValueError(f"{location} {field} must contain valid P50 and P95 values")
+
+
+def check_selection(rows, ticks, source):
+    runs = {}
+    for run in source:
+        key = run_key(run)
+        if key in runs:
+            raise ValueError(f"Duplicate source run {key}")
+        runs[key] = run
+    expected_runs = set(keys("diagnostic"))
+    if runs.keys() != expected_runs:
+        raise ValueError(f"Source runs differ from the protocol (missing {sorted(expected_runs - runs.keys())}, "
+                         f"unexpected {sorted(runs.keys() - expected_runs)})")
+
+    landmarks = range(CFG["first_landmark"], CFG["last_landmark"]+1, CFG["landmark_stride"])
+    expected_ticks = {(*key, time) for key in runs for time in landmarks}
+    ticks_by_key = {}
+    eligible = defaultdict(list)
+    for tick in ticks:
+        key = snapshot_key(tick)
+        if key in ticks_by_key:
+            raise ValueError(f"Duplicate scheduled snapshot {key}")
+        if key not in expected_ticks:
+            raise ValueError(f"Unexpected scheduled snapshot {key}")
+        ticks_by_key[key] = tick
+        if tick["focus"] is not None:
+            eligible[key[:-1], tick["shared"]].append(tick["time"])
+    if missing := expected_ticks - ticks_by_key.keys():
+        raise ValueError(f"Missing scheduled snapshot {min(missing)} ({len(missing)} missing)")
+
+    sampled = defaultdict(set)
+    seen = set()
+    for pair in rows:
+        key = snapshot_key(pair)
+        if key in seen:
+            raise ValueError(f"Duplicate paired snapshot {key}")
+        seen.add(key)
+        tick = ticks_by_key.get(key)
+        if tick is None or tick["focus"] is None:
+            raise ValueError(f"Paired snapshot {key} has no eligible scheduled snapshot")
+        sampled[key[:-1], tick["shared"]].add(pair["time"])
+
+    limit = CFG["max_pairs_per_scene_and_resource_label"]
+    for key, run in runs.items():
+        rng = Random(f"sample:{key}")
+        for label in (False, True):
+            times = sorted(eligible[key, label])
+            count = len(times)
+            expected = min(count, limit)
+            location = f"Source run {key}, shared={label}"
+            check_logged_fields(run["selection"][str(label)], location, eligible=count, sampled=expected)
+            actual = sampled[key, label]
+            if len(actual) != expected:
+                raise ValueError(f"{location} expected {expected} paired snapshots, found {len(actual)}")
+            # Match the generator's chronological candidates and shared RNG across labels.
+            expected_times = set(rng.sample(times, expected))
+            if actual != expected_times:
+                raise ValueError(f"{location} seeded snapshot times expected {sorted(expected_times)}, "
+                                 f"found {sorted(actual)}")
+
+
 def check_pairs(rows, ticks, recompute):
-    allowed={(r["layout"],r["n"],r["cap"],r["seed"],r["time"]):r for r in ticks}
+    allowed = {snapshot_key(tick): tick for tick in ticks}
     for q in rows:
         b=load_map(q["layout"])
-        identity=(q["layout"],q["n"],q["cap"],q["seed"],q["time"])
+        identity = snapshot_key(q)
         source=allowed[identity]
         f=q["focus"]
-        assert bool(source["matches"])==q["match"] and source["focus"]==f
+        check_logged_fields(q, f"Snapshot {identity}", cap=source["cap"],
+                            focus=source["focus"], rank=source["rank"],
+                            match=source["shared"], matches=source["matches"])
         assert q["rank"]==q["baseline"]["ordered"].index(f)+1
         assert q["promoted"]["ordered"]==[f]+[i for i in q["baseline"]["ordered"] if i!=f]
+        prefixes = []
+        directions = []
+        finishes = []
+        comparisons = []
+        goal = q["goals"][f]
         for arm in ARMS:
             a=q[arm]
-            assert tuple(a["finish"])==replay_events(b,q["positions"],q["goals"],a["observed"])
-            assert a["commit"][f][:3]==a["observed"][f][:3]
+            location = f"Snapshot {identity} {arm}"
+            finish = replay_events(b, q["positions"], q["goals"], a["observed"])
+            prefix = a["observed"][f][:E+1]
+            if a["commit"][f][:E+1] != prefix:
+                raise ValueError(f"{location} committed prefix differs from the observed trajectory")
+
+            motion = direction(b, prefix, goal)
+            motion["heading"] = list(motion["heading"])
+            check_logged_fields(a, location, finish=list(finish), first_focal=prefix)
+            check_logged_fields(a["direction"], f"{location} direction", **motion)
+            prefixes.append(prefix)
+            directions.append(motion)
+            finishes.append(finish)
+            order = a["ordered"]
+            comparisons.append(dict(kind=arm, rank=order.index(f)+1, order=order, **motion))
             if recompute:
                 x=a["focal_query"]
                 checked=inspect_query(b,q["positions"][f],q["goals"][f],
                                       tuple(tuple(r) for r in a["focal"]["reservations"]),W,Query(**x))
                 assert json.loads(json.dumps(checked))==a["controls"]
-        res=[caps(b)-caps(a) for a,b in zip(q["baseline"]["finish"],q["promoted"]["finish"])]
-        assert q["delta"]==res and q["earlier"]==(res[f]<0)
-        assert q["others_later"] == [i for i,t in enumerate(res) if i!=f and t>0]
-        assert q["event3"]==(q["earlier"] and bool(q["others_later"]))
+
+        location = f"Snapshot {identity}"
+        if [o for o in q["order_comparison"] if o["kind"] in ARMS] != comparisons:
+            raise ValueError(f"{location} order_comparison differs from the matched replay arms")
+        res = [caps(promoted)-caps(baseline) for baseline, promoted in zip(*finishes)]
+        early = res[f] < 0
+        others = [i for i, delta in enumerate(res) if i != f and delta > 0]
+        changed = prefixes[0] != prefixes[1]
+        gained = (q["baseline"]["focal_query"]["state"] == "skipped"
+                  and q["promoted"]["focal_query"]["state"] != "skipped")
+        baseline, promoted = directions
+        check_logged_fields(
+            q, location, delta=res, earlier=early, others_later=others,
+            start_remaining=b.distances(goal)[q["positions"][f]],
+            proposed_direction=promoted["relative"] > baseline["relative"],
+            proposed_distance=promoted["progress_two"] > baseline["progress_two"],
+            event1=gained and not changed, event2=changed and not early,
+            event3=early and bool(others),
+        )
 
 
 def main():
     parser=argparse.ArgumentParser()
     parser.add_argument("--verify-probes",action="store_true")
+    parser.add_argument("--data-dir", type=Path, default=DATA,
+                        help="read R5 run data and write analysis results here (default: r5/data_r5)")
     ap=parser.parse_args()
-    rows=read("r5_pairs.jsonl.gz")
-    source=read("r5_source_runs.jsonl")
-    ticks=read("r5_ticks.jsonl.gz")
-    check_pairs(rows,ticks,ap.verify_probes)
-    assert len(ticks)==len(source)*len(range(CFG["first_landmark"],CFG["last_landmark"]+1,CFG["landmark_stride"]))
+    data_dir=ap.data_dir.resolve()
+    try:
+        rows=read(data_dir, "r5_pairs.jsonl.gz")
+        source=read(data_dir, "r5_source_runs.jsonl")
+        ticks=read(data_dir, "r5_ticks.jsonl.gz")
+        policy_runs=read(data_dir, "r5_policy_runs.jsonl.gz")
+        serial=read(data_dir, "r5_work_timing.jsonl")
+    except FileNotFoundError as error:
+        parser.error(f"Missing input file {error.filename}")
+    try:
+        policy = policies(policy_runs)
+        check_timing(serial)
+        check_selection(rows, ticks, source)
+        check_pairs(rows, ticks, ap.verify_probes)
+    except ValueError as error:
+        parser.exit(1, f"{error}\n")
     diag,live=arm_records(rows)
-    csvfile("r5_query_checks.csv",diag)
-    csvfile("r5_pair_summary.csv",[reader_pair(r) for r in rows])
+    csvfile(data_dir, "r5_query_checks.csv", diag)
+    csvfile(data_dir, "r5_pair_summary.csv", [reader_pair(r) for r in rows])
     by_arm={}
     for arm in ARMS:
         data=[x for x in diag if x["arm"]==arm]
@@ -275,9 +437,8 @@ def main():
     for q in rows:
         groups[cell(q)].append(q)
     cells=mean_use(groups,diag,source)
-    csvfile("r5_scenario_cells.csv",cells)
-    policy=policies(read("r5_policy_runs.jsonl.gz"))
-    csvfile("r5_policy_comparison.csv",policy)
+    csvfile(data_dir, "r5_scenario_cells.csv", cells)
+    csvfile(data_dir, "r5_policy_comparison.csv", policy)
     proxies={p:confusion(rows,p) for p in ("proposed_direction","proposed_distance")}
     alternate_patterns=[dict(kind=f,**Counter(str(o["relative"]) for q in rows
                                 for o in q["order_comparison"] if o["kind"]==f))
@@ -301,12 +462,10 @@ def main():
         statuses["original_at_32"]+=a==H
         statuses["promoted_at_32"]+=b==H
     other_delay=Counter(len(q["others_later"]) for q in rows)
-    serial=read("r5_work_timing.jsonl")
-    fields=["seed_tests","interval_expanded","edge_tests","reservation_writes","wall_ms"]
     workload=[dict(layout=q["layout"],n=q["n"],cap=q["cap"],seed=q["seed"],
-                   **{f"{k}_{j}":w for k in fields for j,w in zip(("p50","p95"),q["timing"][k])})
+                   **{f"{k}_{j}":w for k in WORKLOAD_FIELDS for j,w in zip(("p50","p95"),q["timing"][k])})
               for q in serial]
-    csvfile("r5_workload.csv",workload)
+    csvfile(data_dir, "r5_workload.csv", workload)
     summ=dict(source_n=len(source),landmarks=len(ticks),pairs=len(rows),queries=len(diag),
               focal_capped_change=mean([q["delta"][q["focus"]] for q in rows]),
               e_counts=[sum(r[f"event{i}"] for r in rows) for i in (1,2,3)],
@@ -322,7 +481,7 @@ def main():
               resource=rate_contrast(rows,source),cells=cells,policy=policy,workload=workload,
               environment=dict(python=platform.python_version(),versions={"numpy":np.__version__},
                                system=platform.platform(),machine=platform.machine()))
-    (DATA/"r5_summary.json").write_text(json.dumps(summ,indent=2,allow_nan=False))
+    (data_dir/"r5_summary.json").write_text(json.dumps(summ,indent=2,allow_nan=False))
     print(json.dumps({k:v for k,v in summ.items() if k not in ("cells","policy","by_arm","workload","selected_examples")},
                      indent=2))
 

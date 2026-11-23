@@ -12,10 +12,14 @@ from warehouse import W, priority
 def safe(board, paths):
     for t in range(len(paths[0])):
         cells={p[t] for p in paths}
-        assert len(cells)==len(paths) and all(v in board.adj for v in cells)
+        if len(cells) != len(paths):
+            raise AssertionError(f"Vertex collision at step {t}")
+        if any(v not in board.adj for v in cells):
+            raise AssertionError(f"Path visits an untraversable cell at step {t}")
         if t:
             edges={(p[t-1],p[t]) for p in paths}
-            assert all(a==b or b in board.adj[a] and (b,a) not in edges for a,b in edges)
+            if any(a != b and (b not in board.adj[a] or (b, a) in edges) for a, b in edges):
+                raise AssertionError(f"Illegal move or edge swap at step {t}")
     return True
 
 
@@ -48,9 +52,8 @@ def seed_paths(scene,state,goals):
                 del selected[i]
             return False
         for i in order:
-            if i not in selected:
-                assert reserve(i)
-        assert len(selected)==n
+            if i not in selected and not reserve(i):
+                raise AssertionError(f"Could not reserve a seed move for robot {i} at layer {layer+1}")
         positions=tuple(selected[i] for i in range(n))
         for i,p in enumerate(positions):
             result[i].append(p)
