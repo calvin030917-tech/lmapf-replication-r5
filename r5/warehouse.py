@@ -16,6 +16,9 @@ H = CFG["followup"]
 
 
 class Board:
+    """
+    Builds a grid from map rows, recording traversable cells, valid neighbors, and positions within two Manhattan steps.
+    """
     def __init__(self, rows):
         self.height = len(rows)
         self.width = len(rows[0])
@@ -24,21 +27,21 @@ class Board:
         q = set(self.cells)
         self.adj = {
             v: tuple(u for u in (v-self.width, v-1, v+1, v+self.width)
-                     if u in q and self.l1(v, u) == 1)
+                    if u in q and self.l1(v, u) == 1)
             for v in self.cells
         }
         self.nearby = {v: tuple(yy*self.width+xx for xx in range(max(0,x-2),min(self.width,x+3))
                                 for yy in range(max(0,y-2),min(self.height,y+3))
                                 if (xx != x or yy != y) and abs(xx-x)+abs(yy-y) <= 2)
-                       for v in self.cells for x,y in (self.xy[v],)}
+                    for v in self.cells for x,y in (self.xy[v],)}
 
-    def l1(self, a, b):
+    def l1(self, a, b):#Computes the Manhattan distance
         x, y = self.xy[a]
         xx, yy = self.xy[b]
         return abs(xx-x)+abs(yy-y)
 
     @cache
-    def distances(self, goal):
+    def distances(self, goal):# define BFS
         d = array("h", [-1])*len(self.xy)
         d[goal] = 0
         fringe = deque([goal])
@@ -105,7 +108,10 @@ class Scene:
     def goals(self, state):
         return tuple(self.targets[i][j+1] for i,j in enumerate(state.jobs))
 
-
+"""
+Uses a random seed to generate reproducible starts, goal sequences, and initial shortest-path lengths for n robots. 
+Sets the per-round search budget to multiplier × n and returns the scene and initial state.
+"""
 def scenario(name, n, multiplier, seed):
     board = load_map(name)
     rng = random.Random(f"r5:{name}:{n}:{seed}")
@@ -128,16 +134,19 @@ def scenario(name, n, multiplier, seed):
     initial = State(0,starts,(0,)*n,(0,)*n,starts)
     return Scene(board,tuple(results),tuple(lengths),multiplier*n),initial
 
-
+"""
+Computes robot i’s relative task age by dividing elapsed steps 
+since issue by the task’s initial shortest-path length.
+"""
 def age(scene, state, i):
     return (state.t-state.issued[i])/scene.lengths[i][state.jobs[i]]
 
 
-def priority(scene, state, rule):
+def priority(scene, state, rule):#Returns the robot planning order
     cells = state.cells
     goals = scene.goals(state)
     density = {p:sum(v in occupied for v in scene.board.nearby[p])
-               for occupied in [set(cells)] for p in cells}
+            for occupied in [set(cells)] for p in cells}
     if rule == "distance":
         key = lambda i: (-scene.board.distances(goals[i])[cells[i]], i)
     elif rule == "dual":
@@ -148,7 +157,11 @@ def priority(scene, state, rule):
         raise ValueError(rule)
     return tuple(sorted(range(len(cells)),key=key))
 
-
+"""
+Executes the first E steps of the planned paths, currently two steps.
+Checks for arrivals at each step, advances completed tasks to their next goals,
+optionally reports events through observer, and returns the updated state.
+"""
 def execute(scene, state, paths, observer=None):
     jobs, issued = list(state.jobs), list(state.issued)
     for k in range(1,E+1):
@@ -162,4 +175,4 @@ def execute(scene, state, paths, observer=None):
                 jobs[i] = j+1
                 issued[i] = t
     return State(state.t+E,tuple(p[E] for p in paths),tuple(jobs),tuple(issued),
-                 tuple(p[E-1] for p in paths))
+                tuple(p[E-1] for p in paths))
