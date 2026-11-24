@@ -1,6 +1,6 @@
 # LMAPF R5 reproducibility archive
 
-[简体中文](README.zh-CN.md)
+[简体中文](README.zh-CN.md) · [Bilingual file index](FILE_GUIDE.md)
 
 ## What this project studies
 
@@ -11,6 +11,8 @@ R5 uses two public Moving AI warehouse maps, 128 source simulations, and 460 pai
 ## Repository guide
 
 The [R5 reproduction directory](r5/) contains the experiment code, protocol, benchmark maps, and recorded data. [Supporting documents](docs/) contain the environment notes, sources, and manuscript release records.
+
+Open the [bilingual file index](FILE_GUIDE.md) for the purpose of each file. Each directory links to its own guide.
 
 | Category | Where to look | What it contains |
 | --- | --- | --- |
@@ -24,6 +26,26 @@ The [R5 reproduction directory](r5/) contains the experiment code, protocol, ben
 | Historical R4 experiments | [historical_r4/](historical_r4/), [R4 guide](historical_r4/README.md) | Earlier synthetic experiments, their simulator, data, and figures |
 
 To read the study, start with the [manuscript](manuscript_en/paper_en.txt) and the [diagnostic figure](figures_r5/en/diagnostic_validation.png). To check the archived results, run the verification commands below from the repository root. To regenerate R5, run the simulation, analysis, and figure steps in that order.
+
+## Planner optimization and supplemental figures
+
+The original planner builds a safe-interval cache for each robot query and sorts reservation times on cache misses. The optimized planner encodes the occupied time steps as bitmasks and reuses the corresponding intervals across robot queries in the same round. It eliminates intervals outside a transition’s feasible time range before checking reverse edges. With `r5/` on the Python import path, use `from interval_planner_fast import plan` to opt in. The frozen experiment runner uses the original planner. [Optimized planner](r5/interval_planner_fast.py)
+
+In 4,608 paired timed rounds across 48 configurations on macOS arm64 with Python 3.14.2, pooled P50 fell from 1.584 to 1.424 ms and P95 from 3.161 to 2.720 ms. Paths, query results, focal controls, and work counters matched across 5,760 rolling rounds, including warm-up. The measured timings are specific to this machine and workload. [Benchmark results](docs/planner_benchmark.json)
+
+The published timing measurements use the archive baseline. A separate parity check with the planner updates in pull request #1 matched 624 rolling rounds, 24 promoted-order rounds, and 35 fixture queries.
+
+The supplemental figures show proxy prediction errors and other-robot delays, paired policy contrasts with pointwise 95% intervals, and archived planning time and work counts. Each plot is available in English and Chinese as PNG, PDF, and SVG. [English figures](figures_r5/en/FILE_GUIDE.md) · [Chinese figures](figures_r5/cn/FILE_GUIDE.md)
+
+Run from the project root after installing the dependencies listed in the reproduction instructions.
+
+```sh
+python r5/benchmark_planners.py --seeds 6101 6102 --policies density distance dual
+python r5/supplemental_figures.py --language en --out figures_r5/en
+python r5/supplemental_figures.py --language cn --out figures_r5/cn --font /path/to/NotoSansCJKsc-Regular.otf
+```
+
+The benchmark accepts `--json` for machine-readable output. The Chinese plot command can also use a supported system CJK font when `--font` is omitted.
 
 ## Reproduction instructions
 
