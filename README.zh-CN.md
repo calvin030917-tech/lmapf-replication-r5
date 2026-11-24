@@ -1,6 +1,6 @@
 # 仓储终身多智能体路径规划 · R5 项目导读
 
-[English](README.md)
+[English](README.md) · [中英双语文件索引](FILE_GUIDE.md)
 
 ## 这个项目研究什么
 
@@ -11,6 +11,8 @@ R5 在两张 Moving AI 公开仓储地图上运行了 128 次基准仿真，并�
 ## 文件分类
 
 [R5 实验目录](r5/)集中存放复现代码、实验方案、基准地图和实验数据。[配套文档目录](docs/)收录运行环境、来源说明和论文发布记录。
+
+从[中英双语文件索引](FILE_GUIDE.md)可逐级查看每个目录和文件的用途。
 
 | 类别 | 从哪里找 | 包含什么 |
 | --- | --- | --- |
@@ -28,3 +30,23 @@ R5 在两张 Moving AI 公开仓储地图上运行了 128 次基准仿真，并�
 - **了解研究**。先读[中文正文](manuscript_cn/paper_cn.txt)，再看[诊断结果图](figures_r5/cn/diagnostic_validation.png)和[结果汇总](r5/data_r5/r5_summary.json)。
 - **核验已有结果**。使用 Python 3.12，在仓库根目录运行 `python -m pip install -r r5/requirements-r5.txt` 和 `python r5/analyze_r5.py --verify-probes`。分析脚本会校验轨迹和到达时间，并重新生成汇总结果与数值表。
 - **重跑实验**。先运行 `python r5/run_r5.py --workers 4`，再运行分析脚本。需要单独运行诊断实验时，可加 `--only diagnostic`。软件版本、R4 核验、绘图和论文构建命令见[复现说明](README.md#reproduction-instructions)。归档提供论文构建源文件，两份 Word 文档和英文投稿 PDF 可从源码生成。
+
+## 规划器优化与计时结果采用归档基线。用 PR #1 更新后的规划器做了单独的一致性短测，624 个滚动规划轮次、24 个移首轮次和 35 个受控查询均匹配。
+
+补充图表
+
+原规划器为每辆车的查询建立安全区间缓存，遇到新格点时会对预留时刻排序。优化版用位掩码记录占用时刻，按占用模式在同一轮的车辆查询之间复用安全区间，并提前跳过时间上不可达的区间。将 `r5/` 加入 Python 导入路径后，可用 `from interval_planner_fast import plan` 选用优化版。冻结实验入口仍使用原规划器。[优化版规划器](r5/interval_planner_fast.py)
+
+在 macOS arm64、Python 3.14.2 上，48 种配置的 4,608 对计时轮次中，整轮耗时的 P50 从 1.584 ms 降至 1.424 ms，P95 从 3.161 ms 降至 2.720 ms。计入预热后共核对 5,760 个滚动规划轮次，两版的路径、查询结果、焦点对照信息和工作计数均一致。耗时取决于机器与测试负载。[完整基准结果](docs/planner_benchmark.json)
+
+补充图表把归档数据中的代理判据误差与他车延迟、策略间配对差值及逐项 95% 区间、整轮耗时与操作量分别绘出。每张图均提供中英文 PNG、PDF 和 SVG。[中文图表](figures_r5/cn/FILE_GUIDE.md) · [英文图表](figures_r5/en/FILE_GUIDE.md)
+
+安装复现依赖后，可在项目根目录重新运行。
+
+```sh
+python r5/benchmark_planners.py --seeds 6101 6102 --policies density distance dual
+python r5/supplemental_figures.py --language en --out figures_r5/en
+python r5/supplemental_figures.py --language cn --out figures_r5/cn --font /path/to/NotoSansCJKsc-Regular.otf
+```
+
+基准命令可加 `--json` 输出机器可读结果。如果系统已安装脚本支持的中文字体，绘图时可以省略 `--font`。
